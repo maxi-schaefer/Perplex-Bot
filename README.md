@@ -7,7 +7,9 @@ Perplex is a multipurpose Discord Bot, with features like a captcha system, join
 		<img src="https://canary.discordapp.com/api/guilds/999373116918743100/embed.png" alt="Discord server">
 	</a>
 </p>
+
 ## Installation
+
 1. Start cloning the repository and installing the dependencies.
 ```bash
 git clone https://github.com/gokiimax/Discord-Bot.git
