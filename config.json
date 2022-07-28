@@ -1,0 +1,8 @@
+{
+    "token": "YOUR TOKEN HERE",
+    "developerGuild": "GUILD ID HERE",
+    "activityInterval": 5,
+    "botMainColor": "0x9733f5",
+    "botErrorColor": "0xdb3535",
+    "database": "MONGO-DB LINK HERE"
+}
