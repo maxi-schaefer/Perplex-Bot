@@ -1,8 +1,8 @@
 {
-    "token": "YOUR TOKEN HERE",
-    "developerGuild": "GUILD ID HERE",
+    "token": "MTAwMDQxNzY3MDE1MzM3NTgyNA.GDu454.kzTxfnquLIgQwvrVbsmvBJ7jl0A1U4T1IadhkY",
+    "developerGuild": "996089645442007182",
     "activityInterval": 5,
-    "botMainColor": "0x9733f5",
+    "botMainColor": "0xff5454",
     "botErrorColor": "0xdb3535",
-    "database": "MONGO-DB LINK HERE"
+    "database": "mongodb+srv://gokimax:FCBayern0910@perplexbot.syuodhu.mongodb.net/?retryWrites=true&w=majority"
 }

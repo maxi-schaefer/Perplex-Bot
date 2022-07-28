@@ -22,6 +22,7 @@
     "@iamtraction/google-translate": "^1.1.2",
     "@miudiscord/together": "^1.0.3",
     "ascii-table": "^0.0.9",
+    "canvacord": "^5.4.2",
     "captcha-canvas": "^3.1.0",
     "chalk": "^4.1.2",
     "discord-api-types": "^0.36.3",
