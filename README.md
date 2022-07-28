@@ -1,4 +1,4 @@
-# Discord-Bot
+# Perplex-Bot
 Perplex is a multipurpose Discord Bot, with features like a captcha system, join-to-create system and much more
 - Released: 28.07.2022
 - [Invite the bot](https://discord.com/oauth2/authorize?client_id=1000417670153375824&permissions=8&scope=bot%20applications.commands)
@@ -12,8 +12,8 @@ Perplex is a multipurpose Discord Bot, with features like a captcha system, join
 
 1. Start cloning the repository and installing the dependencies.
 ```bash
-git clone https://github.com/gokiimax/Discord-Bot.git
-cd Discord-Bot
+git clone https://github.com/gokiimax/Perplex-Bot.git
+cd Perplex-Bot
 npm install
 ```
 2. Make sure you installed [ffmpeg](https://ffmpeg.org/) (for the music system)
