@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 module.exports = {
   name: "ready",
   rest: false,
-  once: true,
+  once: false,
   /**
    * @param {Client} client
    */

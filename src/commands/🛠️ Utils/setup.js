@@ -1,8 +1,9 @@
-const { Client, ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits, ChannelType, EmbedBuilder } = require('discord.js')
+const { Client, ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits, ChannelType, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js')
 
 const voiceDB = require('../../models/VoiceSystem')
 const captchaDB = require('../../models/CaptchaSystem')
 const modlogsDB = require('../../models/ModerationLogs')
+const featuresDB = require('../../models/Features')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,6 +20,20 @@ module.exports = {
             .setDescription("The join to create Channel!")
             .setRequired(true)
             .addChannelTypes(ChannelType.GuildVoice)
+    ))
+    .addSubcommand(
+        command =>
+        command.setName("levels")
+        .setDescription("Enable or disable the levels!")
+        .addStringOption(
+            option =>
+            option.setName("turn")
+            .setDescription("Enable or Disable the level System")
+            .setRequired(true)
+            .addChoices(
+                { name: "On", value: "on" },
+                { name: "Off", value: "off" },
+            )
     ))
     .addSubcommand(
         command =>
@@ -39,8 +54,14 @@ module.exports = {
             option =>
             option.setName("role")
             .setDescription("The role a verified user gets!")
+            .setRequired(true))
+        .addChannelOption(
+            option => 
+            option.setName("captcha_channel")
+            .setDescription("There is a message coming...")
             .setRequired(true)
-    ))
+            .addChannelTypes(ChannelType.GuildText)
+        ))
     .addSubcommand(
         command =>
         command.setName("info")
@@ -90,13 +111,51 @@ module.exports = {
             }
             break;
 
+            case "levels": {
+
+                switch(options.getString("turn")) {
+                    case "on": {
+                        await featuresDB.findOneAndUpdate(
+                            {GuildID: guild.id},
+                            {LevelSystem: true},
+                            {new: true, upsert: true})
+
+                        Response.setDescription("✅ Successfully enabled the levels system!")
+                    }
+                    break;
+
+                    case "off": {
+                        await featuresDB.findOneAndUpdate(
+                            {GuildID: guild.id},
+                            {LevelSystem: false},
+                            {new: true, upsert: true})
+
+                        Response.setDescription("✅ Successfully disabled the levels system!")
+                    }
+                    break;
+                }
+            }
+            break;
+
             case "captcha": {
+                const button = new ButtonBuilder()
+                .setCustomId("captcha-btn")
+                .setLabel("✅ Verify")
+                .setStyle(ButtonStyle.Success);
+
+                const captcha_channel = options.getChannel("captcha_channel")
+                const captcha_embed = new EmbedBuilder()
+                .setColor(client.mainColor)
+                .setTitle("🤖 Captcha")
+                .setDescription("Please Click on `✅ Verify` and solve the captcha within 30 seconds!")
+
                 await captchaDB.findOneAndUpdate(
                     {GuildID: guild.id},
                     {Role: role.id},
                     {new: true, upsert: true})
 
                 Response.setDescription("✅ Successfully set up the captcha system!")
+                captcha_channel.send({embeds: [captcha_embed], components: [new ActionRowBuilder().addComponents(button)]});
             }
             break;
 
@@ -117,6 +176,15 @@ module.exports = {
                 let captchaStatus = '`🔴 Off`'
                 let voiceStatus = '`🔴 Off`'
                 let modlogStatus = '`🔴 Off`'
+                let levelSystemStatus = '`🔴 Off`'
+
+                const levelSystemCheck = await featuresDB.findOne({GuildID: guild.id})
+                if(levelSystemCheck) {
+                    const { LevelSystem } = levelSystemCheck
+                    if(LevelSystem) levelSystemStatus = '`🟢 On`' 
+                } else{
+                    levelSystemStatus = '`🔴 Off`'
+                }
 
                 const voiceCheck = await voiceDB.findOne({GuildID: guild.id})
                 if(voiceCheck) voiceStatus = '`🟢 On`'
@@ -128,9 +196,10 @@ module.exports = {
                 if(modlogCheck) modlogStatus = '`🟢 On`'
 
                 await Response.addFields([
-                    {name: '🤖 Captcha', value: captchaStatus },
+                    {name: '🤖 Captcha', value: captchaStatus, inline: true },
                     {name: '🔊 Voice', value: voiceStatus, inline: true },
-                    {name: '📕 Mod Log', value: modlogStatus },
+                    {name: '📕 Mod Log', value: modlogStatus, inline: true },
+                    {name: '🎉 Level System', value: levelSystemStatus, inline: true },
                 ])
             }
             break;

@@ -41,6 +41,8 @@ module.exports = {
             .setUsername(`${user.username}`)
             .setDiscriminator(`${user.discriminator}`)
             .setBackground('COLOR', '#121212')
+            .renderEmojis(true)
+            .setLevelColor("#ff5454")
         } else {
             let levelResult = await levelsDB.findOne({GuildID: guild.id, UserID: member.user.id});
 
@@ -53,6 +55,8 @@ module.exports = {
             .setUsername(`${member.user.username}`)
             .setDiscriminator(`${member.user.discriminator}`)
             .setBackground('COLOR', '#121212')
+            .renderEmojis(true)
+            .setLevelColor("#ff5454")
         }
 
         rankcard.build().then(async data => {

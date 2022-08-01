@@ -1,7 +1,9 @@
-const { Client, Message } = require('discord.js')
+const { Client, Message, MessageType } = require('discord.js')
 
 const featuresDB = require('../../models/Features') 
 const levelDB = require('../../models/LevelSystem')
+
+const calculateXP = (level) => level * level * 100
 
 module.exports = {
     name: "messageCreate",
@@ -14,19 +16,16 @@ module.exports = {
      */
     async execute(message, client) {
         const { guild, member } = message
+        if(!message.inGuild()) return;
         if(member.user.bot) return;
 
-        let Enabled = false
-        const result = await featuresDB.findOne({GuildID: guild.id})
-        const { LevelSystem } = result
-
-        if(LevelSystem) {
-            addXP(guild.id, member.id, 5, message)
+        const levelSystemCheck = await featuresDB.findOne({GuildID: guild.id})
+        if(levelSystemCheck) {
+            addXP(guild.id, member.id, 5, message) 
         }
-    }
+    },
+    calculateXP
 }
-
-const calculateXP = (level) => level * level * 100
 
 const addXP = async(guildId, userId, xpToAdd, message) => {
     const result = await levelDB.findOneAndUpdate({
@@ -61,5 +60,3 @@ const addXP = async(guildId, userId, xpToAdd, message) => {
         })
     }
 }
-
-module.exports = { calculateXP }

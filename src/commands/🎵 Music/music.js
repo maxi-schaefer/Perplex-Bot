@@ -94,7 +94,7 @@ module.exports = {
 
                         case "shuffle": {
                             await queue.shuffle()
-                            return interaction.reply({content: '🔀 Shufflex songs in the queue.'})
+                            return interaction.reply({content: '🔀 Shuffled songs in the queue.'})
                         }
 
                         case "stop": {

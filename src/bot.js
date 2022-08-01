@@ -28,7 +28,7 @@ client.buttons = new Collection();
 
 const { loadEvents } = require('./Handlers/EventHandler')
 const { loadCommands } = require('./Handlers/CommandHandler')
-require("./functions/handlers/handleComponents")(client)
+const { loadComponents } = require('./Handlers/ComponentsHandler')
 
 /* Embed Colors */
 client.mainColor = parseInt(botMainColor);
@@ -53,8 +53,8 @@ client.modlogs = async function({ Member, Action, Color, Reason }, interaction) 
   channel.send({embeds: [logsEmbed]})
 }
 
-client.handleComponents();
 client.login(client.config.token).then(() => {
   loadEvents(client);
   loadCommands(client);
+  loadComponents(client);
 })

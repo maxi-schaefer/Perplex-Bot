@@ -1,20 +1,21 @@
-const { Client, GuildMember, AttachmentBuilder } = require('discord.js')
-const { Captcha } = require('captcha-canvas')
+const { ButtonInteraction, Client, AttachmentBuilder, EmbedBuilder } = require('discord.js')
 const DB = require('../../models/CaptchaSystem')
-const { EmbedBuilder } = require('@discordjs/builders')
+const { Captcha } = require('captcha-canvas')
 
 module.exports = {
-    name: "guildMemberAdd",
-    rest: false,
-    once: false,
+    data: {
+        name: "captcha-btn"
+    },
     /**
-     * @param { Client } client
-     * @param { GuildMember } member
+     * 
+     * @param {ButtonInteraction} interaction 
+     * @param {Client} client 
      */
-    async execute(member, client) {
+    async execute(interaction, client) {
+        const { member, guild } =  interaction;
 
-        DB.findOne({ GuildID: member.guild.id }, async (err, data) => {
-            if (!data) return console.log("No data was found!")
+        DB.findOne({ GuildID: guild.id }, async (err, data) => {
+            if(!data) return console.log(`Captcha Disabled for ${guild.name}!`);
 
             const captcha = new Captcha();
             captcha.async = true;
@@ -22,7 +23,8 @@ module.exports = {
             captcha.drawTrace();
             captcha.drawCaptcha();
 
-            const captchaAttachment = new AttachmentBuilder(await captcha.png).setName('captcha.png')
+            const captchaAttachment = new AttachmentBuilder(await captcha.png)
+            .setName("captcha.png");
             
             const captchaEmbed = new EmbedBuilder()
             .setColor(client.mainColor)
@@ -31,12 +33,12 @@ module.exports = {
 
             try {
                 const msg = await member.user.send({files: [captchaAttachment], embeds: [captchaEmbed]})
-
+                
                 const wrongCaptchaEmbed = new EmbedBuilder()
                 .setColor(client.errorColor)
                 .setDescription("🚫 Wrong Captcha");
 
-                const filter = (message) => {
+                const filter_ = (message) => {
                     if(message.author.id !== member.id) return;
                     if(message.content === captcha.text) {
                         return true;
@@ -47,7 +49,7 @@ module.exports = {
 
                 try {
                     const response = await msg.channel.awaitMessages({
-                        filter: filter,
+                        filter: filter_,
                         max: 1,
                         time: 30*1000,
                         errors: ["time"]});
@@ -59,21 +61,19 @@ module.exports = {
 
                             const role = member.guild.roles.cache.get(data.Role)
                             member.roles.add(role)
-                            member.send("`✅ You have been successfully verified!`");
+                            member.user.send("`✅ You have been successfully verified!`");
                         })
                     } else {
-                        // No time and not verified
-                        await member.send("`🔱 You didn't verified so I had to kick you!`")
-                        member.kick("didn't answered verify!")
+                        member.user.send("`❌ You didn't verify!`");
                     }
-                } catch(err) {
-                    return console.error(err)
+
+                } catch (error) {
+                    return console.log(error)
                 }
-            } catch (err) {
-                return console.error(err)
+
+            } catch (error) {
+                return console.log(error)
             }
-
         })
-
     }
 }

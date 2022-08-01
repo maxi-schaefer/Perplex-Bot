@@ -1,5 +1,8 @@
+const { Client } = require('discord.js')
 
-
+/**
+ * @param {Client} client 
+ */
 function loadCommands(client) {
     const ascii = require('ascii-table')
     const fs = require('fs')
