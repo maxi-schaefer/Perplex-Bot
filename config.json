@@ -1,8 +1,8 @@
 {
-    "token": "ODg3NjgwMTU4OTEwMjc5NzMy.GFJY-G.fZTXQ1XBKA_zGQ827FzNLObkouGxEAztpzkELU",
-    "developerGuild": "964819973727977473",
+    "token": "YOUR TOKEN HERE",
+    "developerGuild": "GUILD ID HERE",
     "activityInterval": 5,
     "botMainColor": "0xff5454",
     "botErrorColor": "0xdb3535",
-    "database": "mongodb+srv://gokimax:HnZBaMuCV94jQomg@perplexbot.syuodhu.mongodb.net/?retryWrites=true&w=majority"
+    "database": "MONGO-DB LINK HERE"
 }
