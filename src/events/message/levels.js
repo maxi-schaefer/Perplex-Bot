@@ -20,7 +20,7 @@ module.exports = {
         if(member.user.bot) return;
 
         const levelSystemCheck = await featuresDB.findOne({GuildID: guild.id})
-        if(levelSystemCheck.LevelSystem.Enabled) {
+        if(levelSystemCheck && levelSystemCheck.LevelSystem.Enabled) {
             addXP(guild.id, member.id, 5, message, client) 
         }
     },

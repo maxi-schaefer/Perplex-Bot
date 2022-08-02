@@ -34,6 +34,9 @@ const { loadComponents } = require('./Handlers/ComponentsHandler')
 client.mainColor = parseInt(botMainColor);
 client.errorColor = parseInt(botErrorColor);
 
+client.hexMainColor = botMainColor.replace('0x', "#");
+client.hexErrorColor = botErrorColor.replace('0x', "#");
+
 /* Mod Logs */
 const modlogsDB = require('./models/ModerationLogs');
 client.modlogs = async function({ Member, Action, Color, Reason }, interaction) {

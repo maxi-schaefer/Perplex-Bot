@@ -17,7 +17,7 @@ module.exports = {
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 
-     * @param {*} client 
+     * @param {Client} client 
      */
     async execute(interaction, client) {
         const { options, guild, member } = interaction;
@@ -29,6 +29,7 @@ module.exports = {
 
             const rankcard = new Canvacord.Rank()
             const user = options.getUser("member")
+            const color = client.hexMainColor
 
             if (user) {
                 let levelResult = await levelsDB.findOne({GuildID: guild.id, UserID: user.id});
@@ -36,32 +37,33 @@ module.exports = {
                     rankcard.setAvatar(user.displayAvatarURL({extension: 'png'}))
                     .setCurrentXP(parseInt(`${levelResult.xp || "0"}`))
                     .setLevel(parseInt(`${levelResult.level || "1"}`))
-                    .setProgressBar('#ff5454')
+                    .setProgressBar(color)
                     .setRequiredXP(calculateXP(levelResult.level))
                     .setOverlay("#000000", 1, false)
                     .setUsername(`${user.username}`)
                     .setDiscriminator(`${user.discriminator}`)
                     .setBackground('IMAGE', LevelSystem.Background || "https://cdn.discordapp.com/attachments/984457148538945546/1003609214222094346/test.png")
                     .renderEmojis(true)
-                    .setLevelColor("#ff5454")
+                    .setLevelColor(color)
                 } else {
                     return interaction.reply({content: `${user} does not have any XP 🙁`, ephemeral: true})
                 }
             } else {
                 let levelResult = await levelsDB.findOne({GuildID: guild.id, UserID: member.user.id});
+                console.log(color)
 
                 if(levelResult.xp) {
                     rankcard.setAvatar(member.user.displayAvatarURL({extension: 'png'}))
                     .setCurrentXP(parseInt(`${levelResult.xp}`) || 0)
                     .setLevel(parseInt(`${levelResult.level}` || 1))
                     .setRequiredXP(calculateXP(levelResult.level))
-                    .setProgressBar('#ff5454')
+                    .setProgressBar(color)
                     .setOverlay("#000000", 1, false)
                     .setUsername(`${member.user.username}`)
                     .setDiscriminator(`${member.user.discriminator}`)
                     .setBackground('IMAGE', LevelSystem.Background || "https://cdn.discordapp.com/attachments/984457148538945546/1003609214222094346/test.png")
                     .renderEmojis(true)
-                    .setLevelColor("#ff5454")
+                    .setLevelColor(color)
                 } else {
                     return interaction.reply({content: `You do not have any XP 🙁`, ephemeral: true})
                 }
