@@ -1,4 +1,4 @@
-const { Client, Message, MessageType } = require('discord.js')
+const { Client, Message, MessageType, EmbedBuilder } = require('discord.js')
 
 const featuresDB = require('../../models/Features') 
 const levelDB = require('../../models/LevelSystem')
@@ -20,14 +20,17 @@ module.exports = {
         if(member.user.bot) return;
 
         const levelSystemCheck = await featuresDB.findOne({GuildID: guild.id})
-        if(levelSystemCheck) {
-            addXP(guild.id, member.id, 5, message) 
+        if(levelSystemCheck.LevelSystem.Enabled) {
+            addXP(guild.id, member.id, 5, message, client) 
         }
     },
     calculateXP
 }
 
-const addXP = async(guildId, userId, xpToAdd, message) => {
+/**
+ * @param {Message} message 
+ */
+const addXP = async(guildId, userId, xpToAdd, message, client) => {
     const result = await levelDB.findOneAndUpdate({
         GuildID: guildId,
         UserID: userId
@@ -49,7 +52,14 @@ const addXP = async(guildId, userId, xpToAdd, message) => {
         level++
         xp -= needed
 
-        message.reply(`<@${message.member.user.id}> reached Level ${level} 🥳`)
+        const LevelEmbed = new EmbedBuilder()
+        .setTitle("Level Up")
+        .setDescription(`Congrats **${message.member.user.username}**! You are now __**Level ${level}**__ 🥳`)
+        .setThumbnail(message.member.user.displayAvatarURL())
+        .setColor(client.mainColor)
+        .setTimestamp(Date.now());
+
+        message.reply({embeds: [LevelEmbed]});
 
         await levelDB.updateOne({
             GuildID: guildId,

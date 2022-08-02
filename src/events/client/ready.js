@@ -1,5 +1,5 @@
 const { Client } = require("discord.js");
-const { activityInterval, guildId, database } = require("../../../config.json")
+const { activityInterval, database } = require("../../../config.json")
 const mongoose = require('mongoose')
 
 module.exports = {
@@ -10,14 +10,16 @@ module.exports = {
    * @param {Client} client
    */
   async execute(client) {
+
+    /* Connect to database */
+    if(!database) return;
+    mongoose.connect(database, {}).then(() => console.log("The client is now connected to the database!")  
+    ).catch((err) => console.error(err))
+
     console.log(
       `Logged in as ${client.user.tag} and running on ${client.guilds.cache.size} Server!`
     );
     updateActivity(client)
-
-    /* Connect to database */
-    if(!database) return;
-    mongoose.connect(database, {}).then(() => console.log("The client is now connected to the database!")).catch((err) => console.error(err))
   },
 };
 

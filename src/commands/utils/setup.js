@@ -29,12 +29,15 @@ module.exports = {
             option =>
             option.setName("turn")
             .setDescription("Enable or Disable the level System")
-            .setRequired(true)
             .addChoices(
                 { name: "On", value: "on" },
                 { name: "Off", value: "off" },
-            )
-    ))
+            ))
+        .addStringOption(
+            option =>
+            option.setName("background")
+            .setDescription("Change the rank card background! (Needs to be a valid link )")
+            .setMinLength(2)))
     .addSubcommand(
         command =>
         command.setName("modlogs")
@@ -112,27 +115,61 @@ module.exports = {
             break;
 
             case "levels": {
+                const background = options.getString("background");
+                const level_enabled = await featuresDB.findOne({GuildID: guild.id});
+                if(level_enabled) {
+                    const { LevelSystem } = level_enabled;
 
-                switch(options.getString("turn")) {
-                    case "on": {
-                        await featuresDB.findOneAndUpdate(
-                            {GuildID: guild.id},
-                            {LevelSystem: true},
-                            {new: true, upsert: true})
-
-                        Response.setDescription("✅ Successfully enabled the levels system!")
+                    if(background) {
+                        if(isValidHttpUrl(background)) {
+                            await featuresDB.findOneAndUpdate(
+                                {GuildID: guild.id},
+                                {LevelSystem: {
+                                     Enabled: LevelSystem ? 
+                                     LevelSystem.Enabled : 
+                                     false,
+                                     Background: background 
+                                }},
+                                {new: true, upsert: true}
+                            )
+        
+                            Response
+                            .setDescription("🖼️ New Background set!")
+                            .setImage(background);
+                        } else {
+                            Response.setDescription("❌ `background` needs to be a valid link!") 
+                            return interaction.reply({embeds: [Response], ephemeral: true})
+                        }
                     }
-                    break;
 
-                    case "off": {
-                        await featuresDB.findOneAndUpdate(
-                            {GuildID: guild.id},
-                            {LevelSystem: false},
-                            {new: true, upsert: true})
+                    switch(options.getString("turn")) {
 
-                        Response.setDescription("✅ Successfully disabled the levels system!")
+                        case "on": {
+                            await featuresDB.findOneAndUpdate(
+                                {GuildID: guild.id},
+                                {LevelSystem: { Enabled: true, Background: LevelSystem ? LevelSystem.Background : "https://cdn.discordapp.com/attachments/984457148538945546/1003609214222094346/test.png" }},
+                                {new: true, upsert: true})
+    
+                            Response.setDescription("✅ Successfully enabled the levels system!")
+                        }
+                        break;
+    
+                        case "off": {
+                            await featuresDB.findOneAndUpdate(
+                                {GuildID: guild.id},
+                                {LevelSystem: { Enabled: true, Background: LevelSystem ? LevelSystem.Background : "https://cdn.discordapp.com/attachments/984457148538945546/1003609214222094346/test.png" }},
+                                {new: true, upsert: true})
+    
+                            Response.setDescription("✅ Successfully disabled the levels system!")
+                        }
+                        break;
                     }
-                    break;
+                } else {
+                    await featuresDB.findOneAndUpdate(
+                        {GuildID: guild.id},
+                        {LevelSystem: { Enabled: false, Background: "https://cdn.discordapp.com/attachments/984457148538945546/1003609214222094346/test.png"}},
+                        {new: true, upsert: true})
+                    Response.setDescription("Set up the Level System, use `/setup levels turn: On` to turn it on, \n or use `/setup levels background: 'url'` to change the rankcard background!");
                 }
             }
             break;
@@ -181,7 +218,7 @@ module.exports = {
                 const levelSystemCheck = await featuresDB.findOne({GuildID: guild.id})
                 if(levelSystemCheck) {
                     const { LevelSystem } = levelSystemCheck
-                    if(LevelSystem) levelSystemStatus = '`🟢 On`' 
+                    if(LevelSystem.Enabled) levelSystemStatus = '`🟢 On`' 
                 } else{
                     levelSystemStatus = '`🔴 Off`'
                 }
@@ -235,4 +272,16 @@ module.exports = {
 
         await interaction.reply({embeds: [Response], ephemeral: true})
     }
+}
+
+function isValidHttpUrl(string) {
+    let url;
+
+    try {
+        url = new URL(string);
+    } catch (_) {
+        return false
+    }
+
+    return url.protocol === "https:" || url.protocol === "http:";
 }
