@@ -9,7 +9,7 @@ module.exports = model("Features", new Schema({
         },
         Background: {
             type: String,
-            default: "https://cdn.discordapp.com/attachments/984457148538945546/1003609214222094346/test.png"
+            default: "https://cdn.discordapp.com/attachments/965674056080826368/1003622130921001040/background.png"
         }
     }
 }))

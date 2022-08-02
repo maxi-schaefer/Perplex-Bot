@@ -147,7 +147,7 @@ module.exports = {
                         case "on": {
                             await featuresDB.findOneAndUpdate(
                                 {GuildID: guild.id},
-                                {LevelSystem: { Enabled: true, Background: LevelSystem ? LevelSystem.Background : "https://cdn.discordapp.com/attachments/984457148538945546/1003609214222094346/test.png" }},
+                                {LevelSystem: { Enabled: true, Background: LevelSystem ? LevelSystem.Background : "https://cdn.discordapp.com/attachments/965674056080826368/1003622130921001040/background.png" }},
                                 {new: true, upsert: true})
     
                             Response.setDescription("✅ Successfully enabled the levels system!")
@@ -157,7 +157,7 @@ module.exports = {
                         case "off": {
                             await featuresDB.findOneAndUpdate(
                                 {GuildID: guild.id},
-                                {LevelSystem: { Enabled: true, Background: LevelSystem ? LevelSystem.Background : "https://cdn.discordapp.com/attachments/984457148538945546/1003609214222094346/test.png" }},
+                                {LevelSystem: { Enabled: true, Background: LevelSystem ? LevelSystem.Background : "https://cdn.discordapp.com/attachments/965674056080826368/1003622130921001040/background.png" }},
                                 {new: true, upsert: true})
     
                             Response.setDescription("✅ Successfully disabled the levels system!")
@@ -167,7 +167,7 @@ module.exports = {
                 } else {
                     await featuresDB.findOneAndUpdate(
                         {GuildID: guild.id},
-                        {LevelSystem: { Enabled: false, Background: "https://cdn.discordapp.com/attachments/984457148538945546/1003609214222094346/test.png"}},
+                        {LevelSystem: { Enabled: false, Background: "https://cdn.discordapp.com/attachments/965674056080826368/1003622130921001040/background.png"}},
                         {new: true, upsert: true})
                     Response.setDescription("Set up the Level System, use `/setup levels turn: On` to turn it on, \n or use `/setup levels background: 'url'` to change the rankcard background!");
                 }
