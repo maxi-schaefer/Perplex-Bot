@@ -33,7 +33,8 @@ module.exports = {
 
             if (user) {
                 let levelResult = await levelsDB.findOne({GuildID: guild.id, UserID: user.id});
-                if(levelResult.xp) {
+                
+                if(levelResult && levelResult.xp) {
                     rankcard.setAvatar(user.displayAvatarURL({extension: 'png'}))
                     .setCurrentXP(parseInt(`${levelResult.xp || "0"}`))
                     .setLevel(parseInt(`${levelResult.level || "1"}`))
@@ -50,9 +51,8 @@ module.exports = {
                 }
             } else {
                 let levelResult = await levelsDB.findOne({GuildID: guild.id, UserID: member.user.id});
-                console.log(color)
 
-                if(levelResult.xp) {
+                if(levelResult && levelResult.xp) {
                     rankcard.setAvatar(member.user.displayAvatarURL({extension: 'png'}))
                     .setCurrentXP(parseInt(`${levelResult.xp}`) || 0)
                     .setLevel(parseInt(`${levelResult.level}` || 1))
