@@ -49,7 +49,7 @@ You are welcome to contribute by submitting a Pull Request to the repository.
 ## ☕️ Support & Socials
 My Bot is open source and free to use. If you found any of my repos useful and would like to support my projects, feel free to donate to my bitcoin address.
 
-### 🔗 bc1qvchfpnjgwwgm7hel5sd70t7v4c4n89c3z7dyd7
+### 🔗 bc1qg2v8p3pz6u2h8mnhw47azcjhevf800037l64uj
 
 [![TikTok Link](https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white)](https://tiktok.com/@maxii.x6)
 [![Twitter Link](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/gokimax_x)
